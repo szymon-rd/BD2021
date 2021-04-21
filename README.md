@@ -1,4 +1,4 @@
-# Optimizing database queries using redundant elasticsearch database in real-world business applications
+# Optimizing database queries using redundant elasticsearch in real-world business applications
 Project for `AGH Bazy Danych 2` class.
 
 ## Structure
