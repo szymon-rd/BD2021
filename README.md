@@ -5,7 +5,7 @@ Project for `AGH Bazy Danych 2` class.
 This project will consist of the following parts:
 1. Introduction to elasticsearch and the project domain
 2. Research on the topic, good pratices and standards concerning elasticsearch redundancy.
-3. Benchmarking complex business-like scenarios in elasticsearch vs postgresql (mongo?)
+3. Benchmarking complex business-like scenarios in elasticsearch vs postgresql
 4. Results and final thoughts.
 Each section will be accompanied with related code snippets.
 
