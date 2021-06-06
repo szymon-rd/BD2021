@@ -15,7 +15,7 @@ const pool = new Pool({
 });
 
 const readInterface = readline.createInterface({ 
-  input: fs.createReadStream('dataset.json'),
+  input: fs.createReadStream('../../../dataset.json'),
 });
 
 const writeStream = fs.createWriteStream('postgres-dataset.csv');
