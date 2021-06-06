@@ -16,8 +16,32 @@ a {
 .header {
   font-size: 12;
   font-style: italic;
+  color: darkslategrey;
 }
 
 .body {
   font-size: 14;
+}
+
+.votes {
+  font-size: 12;
+  color: darkslategrey;
+}
+
+.seesubcomments {
+  font-size: 12;
+}
+
+.subcomments {
+  margin-left: 2vw;
+}
+
+.input {
+  padding: 10px;
+  background: lightblue;
+  margin-left: 1vw;
+}
+
+.infield {
+  margin-left: 1vw;
 }

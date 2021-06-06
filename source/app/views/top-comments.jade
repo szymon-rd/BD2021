@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h1= title
+  p Top comments
+  if show_prev
+    p #[a(href="/comments/top?after=#{prev_at}") Previous page] | #[a(href="/comments/top?after=#{next_at}") Next page]
+  else
+    p #[a(href="/comments/top?after=#{next_at}") Next page]
+  - each comment in comments
+    .comment
+      .header (r/#{comment.subreddit}) Commented by #{comment.author} at #{comment.created_at}
+      .body #{comment.body}
+      .votes Upvotes: #{comment.ups}; Downvotes: #{comment.downs}
+      .seesubcomments #[a(href="/comments/t/#{comment.id}") See subcomments]

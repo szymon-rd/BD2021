@@ -30,9 +30,9 @@ async function createTable() {
     controversiality text,
     created_utc text,
     body text,
-    ups text,
-    downs text,
-    score text,
+    ups integer,
+    downs integer,
+    score integer,
     parent_id text,
     archived text
   );`);

@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  h1= title
+  p Thread at #{tcomment.subreddit}
+  .comment
+    .header (r/#{tcomment.subreddit}) Commented by #{tcomment.author} at #{tcomment.created_at}
+    .body #{tcomment.body}
+    .votes Upvotes: #{tcomment.ups}; Downvotes: #{tcomment.downs}
+  .subcomments
+    .input
+      form(action='/comments/t/#{tcomment.id}',method='post')
+        div
+          .inputfield
+            label(for='text') Text 
+              input(id='text',type='text',value='',placeholder='',name='text')
+          .inputfield
+            label(for='upvotes') Upvotes 
+              input(id='upvotes',type='text',value='',placeholder='',name='upvotes')
+        input(type='submit',value='Send',data-transition='fade', data-theme='c')  
+    - each comment in comments
+      .comment
+        .header (r/#{comment.subreddit}) Commented by #{comment.author} at #{comment.created_at}
+        .body #{comment.body}
+        .votes Upvotes: #{comment.ups}; Downvotes: #{comment.downs}
+        .seesubcomments #[a(href="/comments/t/#{comment.id}") See subcomments]

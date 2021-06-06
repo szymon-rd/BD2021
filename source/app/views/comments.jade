@@ -1,9 +1,0 @@
-extends layout
-
-block content
-  h1= title
-  p Comments
-  - each comment in comments
-    .comment
-      .header Commented by #{comment.author} at #{comment.created_at}
-      .body #{comment.body}
