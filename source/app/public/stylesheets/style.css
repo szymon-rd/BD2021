@@ -45,3 +45,20 @@ a {
 .infield {
   margin-left: 1vw;
 }
+
+.searchblock {
+  margin-top: 10px;
+  padding: 10px;
+  background: lightblue;
+  margin-left: 1vw;
+}
+
+.searchstring {
+  padding: 3px;
+  background: lightblue;
+}
+
+.head {
+  background: lightblue;
+  font-size: 36px;
+}

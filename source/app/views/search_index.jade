@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  h1= title
+  p Data analysis
+  .searchblock
+    p Text search
+    form(action='/search/textSearch',method='post')
+      div
+        .inputfield
+          label(for='mode') Mode 
+            input(type="radio", name="mode", value="es") 
+            | Elastic
+            input(type="radio", name="mode", value="psql")
+            | Postgres
+            input(type="radio", name="mode", value="psqltsv")
+            | Postgres Text Search Vector
+        .inputfield
+          label(for='string') Search string 
+            input(id='string',type='text',value='',placeholder='',name='string')
+      input(type='submit',value='Search',data-transition='fade', data-theme='c')
+  .searchblock
+    p Coordinate search
+    form(action='/search/coordinateSearch',method='post')
+      div
+        .inputfield
+          label(for='mode') Mode 
+            input(type="radio", name="mode", value="es") 
+            | Elastic
+            input(type="radio", name="mode", value="psql")
+            | Postgres
+      input(type='submit',value='Search',data-transition='fade', data-theme='c')    

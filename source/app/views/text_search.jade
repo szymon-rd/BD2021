@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  h1= title
+  p 
+    span Text search for 
+    span(class="searchstring") #{string}
+  p Mode: #{mode}
+  p Total: #{count} (limited to 5000)
+  p Time elapsed: #{time}ms
+  p First entries: (limited to 100)
+  - each comment in comments
+    .comment
+      .header (r/#{comment.subreddit}) Commented by #{comment.author} at #{comment.created_at}
+      .body #{comment.body}
+      .votes Upvotes: #{comment.ups}; Downvotes: #{comment.downs}
+      .seesubcomments #[a(href="/comments/t/#{comment.id}") See subcomments]

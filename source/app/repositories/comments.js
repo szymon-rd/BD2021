@@ -1,13 +1,7 @@
 const uuid = require("uuid");
-const { Pool } = require('pg')
+const db = require("./db");
 
-const pool = new Pool({
-  user: 'reddit',
-  host: 'localhost',
-  database: 'reddit',
-  password: '',
-  port: 5432,
-});
+const pool = db.pool;
 
 async function fetchTopComments(limit, offset) {
   return await (await pool.query(`SELECT * FROM reddit_data ORDER BY ups DESC LIMIT ${limit} OFFSET ${offset}`)).rows;
@@ -29,5 +23,5 @@ async function persistComment(subreddit, author, createdAt, body, ups, parentId)
   `)
   console.log("inserted")
 }
-
+ 
 module.exports = {fetchTopComments, fetchCommentsForThread, fetchComment, persistComment};

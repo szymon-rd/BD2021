@@ -21,3 +21,19 @@ The following commands can be used to run the databases:
 
 ### Feeding the databases with data
 
+
+### Indices used on PSQL
+```
+CREATE INDEX top_index
+    ON reddit_data (ups);
+
+CREATE INDEX name_index
+    ON reddit_data (name);
+
+CREATE INDEX body_index
+    ON reddit_data (body); /* fails */
+
+
+CREATE INDEX body_tsv_index ON reddit_data
+    USING gin(to_tsvector('simple',body));
+```
