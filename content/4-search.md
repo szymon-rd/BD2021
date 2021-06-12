@@ -87,6 +87,14 @@ async function textSearchPsqlTsv(searchString) {
 | i love you    | 5000                          | 352ms |
 The PostgreSQL TSV is the fastest approach. However, we think that there is an important reason to it being so fast - it's just much simpler than the ElasticSearch scoring. It still does not fullfill all of our expectations - it just checks if the given terms are included in the text search vectors. ElasticSearch model would still give us results that would help us build much better full-text search function to offer to the app's users. And it's also much simpler in terms of the written code and preparations.
 
+### UI screenshots
+
+#### Text search input
+![alt text](./images/4-textsearch-input.png)
+
+#### Text search results
+![alt text](./images/4-textsearch-results.png)
+
 ## Custom regex search
 
 TODO

@@ -110,10 +110,10 @@ It uses a random v4 UUID trimmed of dashes as id for the new entry.
 Interface of the app is very simple, below are a few screenshots:
 
 #### /
-![alt text](./images/1-index.png "Logo Title Text 1")
+![alt text](./images/1-index.png)
 
 #### /comments/top
-![alt text](./images/1-top-comments.png "Logo Title Text 1")
+![alt text](./images/1-top-comments.png)
 
 #### /comments/t/:thread_id
-![alt text](./images/1-thread.png "Logo Title Text 1")
+![alt text](./images/1-thread.png)
