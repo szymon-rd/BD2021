@@ -36,4 +36,16 @@ CREATE INDEX body_index
 
 CREATE INDEX body_tsv_index ON reddit_data
     USING gin(to_tsvector('simple',body));
+
+ALTER TABLE reddit_data ADD COLUMN tsv tsvector;
+
+UPDATE reddit_data SET tsv =
+    setweight(to_tsvector(author), 'A') ||
+    setweight(to_tsvector(body), 'B') ||
+    setweight(to_tsvector(subreddit), 'C');
+
+
 ```
+
+note:
+[54000] word is too long to be indexed
