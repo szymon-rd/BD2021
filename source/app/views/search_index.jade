@@ -14,14 +14,14 @@ block content
             input(type="radio", name="mode", value="psql")
             | Postgres
             input(type="radio", name="mode", value="psqltsv")
-            | Postgres Text Search Vector
+            | Postgres TSV
         .inputfield
           label(for='string') Search string 
             input(id='string',type='text',value='',placeholder='',name='string')
       input(type='submit',value='Search',data-transition='fade', data-theme='c')
   .searchblock
-    p Coordinate search
-    form(action='/search/coordinateSearch',method='post')
+    p Regex search
+    form(action='/search/regexSearch',method='post')
       div
         .inputfield
           label(for='mode') Mode 
@@ -29,4 +29,34 @@ block content
             | Elastic
             input(type="radio", name="mode", value="psql")
             | Postgres
-      input(type='submit',value='Search',data-transition='fade', data-theme='c')    
+        .inputfield
+          label(for='string') Search regex 
+            input(id='string',type='text',value='',placeholder='',name='string')
+      input(type='submit',value='Search',data-transition='fade', data-theme='c')
+  .searchblock
+    p Weighted search
+    p Weights: author: 10; body: 4; subreddit: 2
+    form(action='/search/weightedSearch',method='post')
+      div
+        .inputfield
+          label(for='mode') Mode 
+            input(type="radio", name="mode", value="es") 
+            | Elastic
+            input(type="radio", name="mode", value="psql")
+            | Postgres TSV
+        .inputfield
+          label(for='string') Search string 
+            input(id='string',type='text',value='',placeholder='',name='string')
+      input(type='submit',value='Search',data-transition='fade', data-theme='c')        
+  .searchblock
+    p Search for recent
+    p Only ES
+    form(action='/search/recentSearch',method='post')
+      div
+        .inputfield
+          label(for='string') Search string 
+            input(id='string',type='text',value='',placeholder='',name='string')
+        .inputfield
+          label(for='string') Date 
+            input(id='date',type='text',value='',placeholder='',name='date')
+      input(type='submit',value='Search',data-transition='fade', data-theme='c')      

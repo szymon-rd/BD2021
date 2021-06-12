@@ -38,15 +38,15 @@ async function textSearchElastic(searchString) {
   return extractSearchBodies(body.hits.hits);
 }
 
-async function coordinatesSearchPsql() {
+async function regexSearchPsql(regex) {
   return await (await pool.query(
     `SELECT * FROM reddit_data 
-      WHERE body ~ '.*([-+]?)([\d]{1,2})(((\.)([\d]{2,10})(,)))(\s*)(([-+]?)([\d]{1,3})((\.)([\d]{2,10}))?).*'
+      WHERE body ~ '${regex}'
       LIMIT 5000`
     )).rows;
 }
 
-async function coordinatesSearchElastic() {
+async function regexSearchElastic(regex) {
   const { body } = await esClient.search({
     index: 'reddit_data',
     size: 5000,
@@ -54,7 +54,7 @@ async function coordinatesSearchElastic() {
       query: {
         regexp: {
           body: {
-            value: '.*([-+]?)([\d]{1,2})(((\.)([\d]{2,10})(,)))(\s*)(([-+]?)([\d]{1,3})((\.)([\d]{2,10}))?).*',
+            value: regex,
             flags: 'ALL',
             case_insensitive: true,
             max_determinized_states: 10000,
@@ -67,4 +67,63 @@ async function coordinatesSearchElastic() {
   return extractSearchBodies(body.hits.hits);
 }
 
-module.exports = {textSearchElastic, textSearchPsql, textSearchPsqlTsv, coordinatesSearchElastic, coordinatesSearchPsql};
+async function weightedSearchElastic(searchString) {
+  const { body } = await esClient.search({
+    index: 'reddit_data',
+    size: 5000,
+    body: {
+      query: {
+        query_string: {
+          query: searchString,
+          fields: [
+            "author^10.0",
+            "body^4.0",
+            "reddit^2.0"
+          ]
+        }
+      }
+    }
+  })
+  return extractSearchBodies(body.hits.hits);
+}
+
+async function weightedSearchPsqlTsv(searchString) {
+  return await (await pool.query(
+    `SELECT * FROM reddit_data 
+      WHERE tsv @@ to_tsquery('${searchString}')
+      LIMIT 5000`
+    )).rows;
+}
+
+async function recentSearchElastic(date, searchString) {
+  const { body } = await esClient.search({
+    index: 'reddit_data',
+    size: 5000,
+    body: {
+      query: {
+        function_score: {
+          query: {match_all: {}},
+          functions: [
+            {
+              gauss: {
+                created_utc: {
+                  origin: date,
+                  scale: "10d",
+                  decay: 0.5,
+                  offset: "5d"
+                }
+              },
+            }
+          ],
+          score_mode: "multiply",
+          query: {
+            match: { body: searchString },
+          }
+        }
+      }
+    }
+  })
+  return extractSearchBodies(body.hits.hits);
+}
+
+module.exports = {textSearchElastic, textSearchPsql, textSearchPsqlTsv, regexSearchPsql, regexSearchElastic, weightedSearchElastic, weightedSearchPsqlTsv, recentSearchElastic};
