@@ -15,6 +15,14 @@ The application that we will be working on is a very basic reddit-like website. 
  * writing our own comments
 During this article we will add data analysis features that will allow us to query this massive dataset in a couple of handy ways. 
 
+### App structure
+The app consists of the following parts:
+ - repositories (`source/app/repositories`)
+ - services (`source/app/services`)
+ - routes (`source/app/routes`)
+ - views (`source/app/views`)
+
+Each fo these parts have their own responsibilities. `Repositories` store the database logic and configuration, including querying and inserting new data to PostgreSQL and ElasticSearch. `Services` implement the business logic of the application. `Routes` define how the http api of the application behaves. `Views` consits of `jade` templates defining the views that then get rendered to `html` files. 
 
 ### Data structure
 Each reddit comment consists of the following fields:
@@ -96,3 +104,16 @@ async function persistComment(subreddit, author, createdAt, body, ups, parentId)
 }
 ```
 It uses a random v4 UUID trimmed of dashes as id for the new entry.
+
+
+### App interface
+Interface of the app is very simple, below are a few screenshots:
+
+#### /
+![alt text](./images/1-index.png "Logo Title Text 1")
+
+#### /comments/top
+![alt text](./images/1-top-comments.png "Logo Title Text 1")
+
+#### /comments/t/:thread_id
+![alt text](./images/1-thread.png "Logo Title Text 1")

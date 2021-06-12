@@ -63,3 +63,27 @@ query: {
 ```
 `match` operation performs a full-text search for the provided string in the `body` fields of the entries. This search is technically a `fuzzy` search, that means that the `body` field does not need to include literally `apple` string, but any string that is similiar. We will describe it in later on.
 Another useful field is the `size`. It specifies what is the maximal number of entries that should be returned from elasticsearch in this single query. Default value is 20, so for better benchmarking we raised it to `5000` in all of the queries.
+
+## Scoring
+Scoring is the core concept of querying in elastic search. Each query gets an assigned score that is then used to order the returned entities respectively. ElasticSearch is built upon Lucene and it had a decisive impact on how the scoring mechanism works. Score is assigned to an entity with the Lucene's `Practical Scoring Function`:
+```
+score(q,d)  =  
+            queryNorm(q)  
+          · coord(q,d)    
+          · ∑ (           
+                tf(t in d)   
+              · idf(t)²      
+              · t.getBoost() 
+              · norm(t,d)    
+            ) (t in q)    
+```
+Where:
+ - `score(q,d)` is the scoring function for document (entry) d and query q
+ - `queryNorm` is the quotient used to normalize the query and is calculated as `queryNorm = 1 / √sumOfSquaredWeights`. Normalizing the query is the process that allows queries to work together despite different structure and different weights assigned to subqueries. 
+ -  `coord` is the coordination factor. It denotes how big a part of the queried text was found in the entry fields.
+ -  `tf` is the term frequency, meaning how many the queried term occured in the entry fields.
+ - `idf` is the inverse document frequency. Its value says how often the searched term occurs in all the entries in the index. If the term is uncommon, the it should be rewarded.
+ - `norm` is the `field length norm`, and that's basically saying how long the field in the document is. If a field is shorter, then it should be more rewarded that the match occured.
+ 
+ ## Fuzziness
+ TODO seba opisz 

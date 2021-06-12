@@ -11,7 +11,7 @@ async function textSearchPsql(searchString) {
 async function textSearchPsqlTsv(searchString) {
   return await (await pool.query(
     `SELECT * FROM reddit_data 
-      WHERE to_tsvector('simple', body) @@ to_tsquery('${searchString}')
+      WHERE to_tsvector('simple', body) @@ to_tsquery('''${searchString}''')
       LIMIT 5000`
     )).rows;
 }
