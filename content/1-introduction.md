@@ -9,7 +9,7 @@ During this project, we intend show how to make a relational database (postgresq
 We will be working on the example app in the [app](../source/app) source folder. We plan to focus on the process of introducing advanced search and data-analysis features to a very basic reddit-like website. In the process of benchmarking and implementing the features, we used [this reddit comments dataset](https://files.pushshift.io/reddit/comments/) that provided us with 10 million data entries.
 
 ## The application
-The application that we will be creating is a very basic reddit-like website. 
+The application that we will be creating is a very basic reddit-like website..
 
 ```
 CREATE INDEX top_index
