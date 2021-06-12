@@ -2,7 +2,11 @@ extends layout
 
 block content
   h1= title
-  p Coordinates search 
+  p 
+    span Regex search for 
+    span(class="searchstring") #{string}
+    span at
+    span(class="searchstring") #{date} 
   p Mode: #{mode}
   p Total: #{count} (limited to 5000)
   p Time elapsed: #{time}ms

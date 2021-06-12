@@ -1,12 +1,12 @@
 # Setup
-We will be using kibana as monitoring and data visualisation tool for ElasticSearch. 
+As a first step, we need to set up our environment.
 
 ## Importing the data and setup
 ### Installation (macOS)
 The first step is installation of ES stack and postgres databases.
 ```
- > brew install elastic/tap/kibana-full
  > brew install elastic/tap/elasticsearch-full
+ > brew install elastic/tap/kibana-full
  > brew install postgresql 
 ```
 
@@ -20,32 +20,17 @@ The following commands can be used to run the databases:
 ```
 
 ### Feeding the databases with data
+#### Postgresql
+Now, we have to import all the required data. We created an utility app at the [dataimport/postgresql](../source/data_import/postgresql) source directory. In order to run it, there has to be a `dataset.json` file in the project root directory. It creates a necessary table to store the data, and then exports the data to csv. Then, the data can be imported with data import utility tool in DataGrip. 
 
 
-### Indices used on PSQL
+#### Keycloak 
+In order to import data to the keycloak we created a utility app available at [dataimport/keycloak](../source/data_import/keycloak) source directory. After running it, it will produce files containing fields mapping and prepared dataset for elasticsearch. In order to import them to the running database, the following commands must be run:
 ```
-CREATE INDEX top_index
-    ON reddit_data (ups);
+curl -X PUT "localhost:9200/reddit_data?pretty" -H 'Content-Type:application/json' --data-binary @elastic-mapping.json
 
-CREATE INDEX name_index
-    ON reddit_data (name);
-
-CREATE INDEX body_index
-    ON reddit_data (body); /* fails */
-
-
-CREATE INDEX body_tsv_index ON reddit_data
-    USING gin(to_tsvector('simple',body));
-
-ALTER TABLE reddit_data ADD COLUMN tsv tsvector;
-
-UPDATE reddit_data SET tsv =
-    setweight(to_tsvector(author), 'A') ||
-    setweight(to_tsvector(body), 'B') ||
-    setweight(to_tsvector(subreddit), 'C');
-
-
+npx elasticdump --input=elastic-dataset.json --output=http://localhost:9200/reddit_data --type=data --transform="doc._source=Object.assign({},doc)" --limit=10000
 ```
 
-note:
-[54000] word is too long to be indexed
+
+
