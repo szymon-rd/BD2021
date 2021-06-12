@@ -9,7 +9,7 @@ The first step is installation of ES stack and postgres databases.
  > brew install elastic/tap/elasticsearch-full
  > brew install postgresql 
 ```
-
+.
 ### Starting the databases
 The following commands can be used to run the databases:
 ```
