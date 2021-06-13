@@ -24,6 +24,7 @@ Above function uses basic `LIKE` syntax. This function was introduced by us in t
 
 ### Elasticsearch approach
 In contrast to the naïve PostgreSQL `LIKE` approach, the Elasticsearch gives us everything out of the box. The search is fuzzy, so query `i love bananas` would match `i lve bananas`. It treats the terms separately, so it will work easily for strings like `i love all bananas`. And last, but not the least, it's a lot faster.
+
 ```
 function extractSearchBodies(hits) {
   return hits.map(extractSearchBody);
