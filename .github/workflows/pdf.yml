@@ -13,8 +13,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: merge mds
         run: |
-          cd content
           mkdir pdfs
+          cd content
           cat *.md > final.md
       - uses: docker://pandoc/latex:2.9
         with:
