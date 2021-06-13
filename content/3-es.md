@@ -84,7 +84,3 @@ Where:
  -  `tf` is the term frequency, meaning how many the queried term occured in the entry fields.
  - `idf` is the inverse document frequency. Its value says how often the searched term occurs in all the entries in the index. If the term is uncommon, the it should be rewarded.
  - `norm` is the `field length norm`, and that's basically saying how long the field in the document is. If a field is shorter, then it should be more rewarded that the match occured.
- 
- ## Fuzziness
- TODO seba opisz 
- 
