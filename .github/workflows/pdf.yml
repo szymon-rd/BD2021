@@ -17,7 +17,7 @@ jobs:
           cat *.md > final.md
       - uses: docker://pandoc/latex:2.9
         with:
-          args: --resource-path=content --output=pdfs/final.pdf content/final.md
+          args: --output=pdfs/final.pdf content/final.md --resource-path=content 
       - uses: actions/upload-artifact@v1
         with:
           name: docs
