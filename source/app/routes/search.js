@@ -31,7 +31,7 @@ router.post('/regexSearch', async function(req, res, next) {
 router.get('/regexSearch', async function(req, res, next) {
   let startTime = new Date().getTime();
   let mode = req.query.mode
-  let searchString = req.query.string
+  let searchString = unescape(req.query.string)
   let {comments, count} = await searchService.regexSearch(mode, searchString)
   let endTime = new Date().getTime();
   let timeElapsed = endTime - startTime;
@@ -39,7 +39,7 @@ router.get('/regexSearch', async function(req, res, next) {
 });
 
 router.post('/weightedSearch', async function(req, res, next) {
-  let searchString = req.body.string
+  let searchString = escape(req.body.string)
   let mode = req.body.mode
   res.redirect(302, `/search/weightedSearch?string=${searchString}&mode=${mode}`)
 });

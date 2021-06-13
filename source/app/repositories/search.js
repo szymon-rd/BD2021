@@ -78,7 +78,7 @@ async function weightedSearchElastic(searchString) {
           fields: [
             "author^10.0",
             "body^4.0",
-            "reddit^2.0"
+            "subreddit^2.0"
           ]
         }
       }
@@ -89,8 +89,10 @@ async function weightedSearchElastic(searchString) {
 
 async function weightedSearchPsqlTsv(searchString) {
   return await (await pool.query(
-    `SELECT * FROM reddit_data 
-      WHERE tsv @@ to_tsquery('${searchString}')
+    `SELECT *, ts_rank_cd(tsv, query) AS rank
+      FROM reddit_data, to_tsquery('''${searchString}''') query
+      WHERE query @@ tsv
+      ORDER BY rank DESC
       LIMIT 5000`
     )).rows;
 }
@@ -110,7 +112,7 @@ async function recentSearchElastic(date, searchString) {
                   origin: date,
                   scale: "10d",
                   decay: 0.5,
-                  offset: "5d"
+                  offset: "2d"
                 }
               },
             }
