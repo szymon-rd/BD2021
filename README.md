@@ -9,6 +9,9 @@ This project will consist of the following parts:
 4. Results and final thoughts.
 Each section will be accompanied with related code snippets.
 
+## The report
+[The latest version of the project's report](https://github.com/sszczep/BD2021/releases/latest/download/final.pdf)
+
 ## Team
 1. Szymon Rodziewicz
 2. Sebastian Szczepański
