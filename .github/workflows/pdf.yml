@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - main
-    # Paths can be used to only trigger actions when you have edited certain files, such as a file within the /docs directory
-    paths:
-      - 'content/**.md'
-      - 'content/images/**'
 
 jobs:
   converttopdf:
@@ -18,17 +14,10 @@ jobs:
       - name: merge mds
         run: |
           cd content
-          mkdir final
-          cat *.md > final/final.md
-      - uses: baileyjm02/markdown-to-pdf@v1
+          cat *.md > final.md
+      - uses: docker://pandoc/latex:2.9
         with:
-          input_dir: content/final
-          output_dir: pdfs
-          images_dir: content/images
-          # for example <img src="./images/file-name.png">
-          image_import: ./images
-          # Default is true, can set to false to only get PDF files
-          build_html: false
+          args: --output=pdfs/final.pdf final.md
       - uses: actions/upload-artifact@v1
         with:
           name: docs
