@@ -91,10 +91,10 @@ The PostgreSQL TSV is the fastest approach. However, we think that there is an i
 ### UI screenshots
 
 #### Text search input
-![alt text](./images/4-textsearch-input.png)
+![Text search input](./images/4-textsearch-input.png)
 
 #### Text search results
-![alt text](./images/4-textsearch-results.png)
+![Text search results](./images/4-textsearch-results.png)
 
 ## Custom regexp search
 Regexp search can be used to find given patterns in data sets. It can be particularly useful in finding emails, phone numbers, addresses and other structured data in text content. However, completing regexp searches in real time can be a demanding task. We created a new endpoint and a view available at:
@@ -163,9 +163,9 @@ Once again, ElasticSearch provided much better and consistent performance. It's 
 
 ### UI screenshots
 #### Regexp search input
-![alt text](./images/4-regex-input.png)
+![Regexp search input](./images/4-regex-input.png)
 #### Regexp search results
-![alt text](./images/4-regex-results.png)
+![Regexp search results](./images/4-regex-results.png)
 
 ## Weighted search
 Very useful type of searching complex text data is a weighted search. Given a couple of fields, we often want to find if any of these fields contain a given string. What's more, we often want to favor some fields over other. That's when the weighted search is useful. It allows to perform a full-text search in a couple of fields and base scoring on a weighted scores of subqueries performed per field. In our case, we want to search for a given string in:
@@ -253,9 +253,12 @@ Postgresql TSV approach is not capable of providing dynamic weights for the quer
 
 ### UI screenshots
 #### Weighted search input
-![alt text](./images/4-weighted-input.png)
+
+![Weighted search input](./images/4-weighted-input.png)
+
 #### Weighted search results
-![alt text](./images/4-weighted-results.png)
+
+![Weighted search results](./images/4-weighted-results.png)
 
 ## Searching in recent comments
 Another great example of flexibility of ElasticSearch querying mechanism is its ability to search based on multiple conditions and mix their scores. Let's say we were given a task of implementing a feature that would allow our users to search in the recent comments for a given term. In this part we implemented a ES querying function that performs this operation.
@@ -326,6 +329,9 @@ Once again, the queries were fast and there would be no problem with providing t
 
 ### UI screenshots
 #### Recent search input
-![alt text](./images/4-recent-input.png)
+
+![Recent search input](./images/4-recent-input.png)
+
 #### Recent search results
-![alt text](./images/4-recent-results.png)
+
+![Recent search results](./images/4-recent-results.png)

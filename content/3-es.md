@@ -70,7 +70,7 @@ Scoring is the core concept of querying in elastic search. Each query gets an as
 score(q,d)  =  
             queryNorm(q)  
           · coord(q,d)    
-          · ∑ (           
+          · sum (           
                 tf(t in d)   
               · idf(t)²      
               · t.getBoost() 
@@ -79,7 +79,7 @@ score(q,d)  =
 ```
 Where:
  - `score(q,d)` is the scoring function for document (entry) d and query q
- - `queryNorm` is the quotient used to normalize the query and is calculated as `queryNorm = 1 / √sumOfSquaredWeights`. Normalizing the query is the process that allows queries to work together despite different structure and different weights assigned to subqueries. 
+ - `queryNorm` is the quotient used to normalize the query and is calculated as `queryNorm = 1 / sqrt(sumOfSquaredWeights)`. Normalizing the query is the process that allows queries to work together despite different structure and different weights assigned to subqueries. 
  -  `coord` is the coordination factor. It denotes how big a part of the queried text was found in the entry fields.
  -  `tf` is the term frequency, meaning how many the queried term occured in the entry fields.
  - `idf` is the inverse document frequency. Its value says how often the searched term occurs in all the entries in the index. If the term is uncommon, the it should be rewarded.
