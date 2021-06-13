@@ -1,9 +1,11 @@
 # Using ElasticSearch
 
 ## API
+
 ElasticSearch is accessible via a REST API. Most operations on it are performed via various endpoints that this API provides.
 
 ### Creating index
+
 `index` in ES is the top-level dataset that is used to store the entries. Creating a new one is as easy as calling:
 `PUT /reddit-data`
 However, we needed to provide some basic settings for the new index. We needed to provide datatypes of the fields of reddit entries. In ES it is done through index mappings. In our case the mappings were defined as follows:
@@ -29,6 +31,7 @@ mappings: {
 For each field we specified a type that was used to index the entries as we entered them into the database. 
 
 #### `keyword` vs `text` type
+
 The most important distinction we made in the types is the decision between `keyword` and `text` for the string fields. As ES learning source states:
 ```
 The primary difference between the text datatype and the keyword datatype is that 
@@ -39,11 +42,13 @@ indexing to allow for partial matching, while keyword fields are indexed as is.
 If we used `keyword` type for `body` of each reddit comment, we would not be able to do efficient full-text search on the comments content and match single words or sets of words of it.
 
 ### Inserting the entries
+
 The endpoint used to put a single entry into the index is:
 `PUT /reddit_data/:entry_id`
 (reddit_data is name of our index) The entry data is passed as a json in the request body, and then the entry is added and indexed in the index. However, we had to insert over 10 million of them, so doing it one by one was not an option. 
 
 #### Bulk API
+
 In order to insert a massive amount of entries, we had to use the `elasticdump` tool, that is in fact using the `Bulk API` of elasticsearch. It uses the following endpoint:
 `POST reddit_data/_bulk`
 And it passes newline-separated jsons as data. For inserting new entries, each line must be structured as follows:
@@ -78,6 +83,7 @@ score(q,d)  =
             ) (t in q)    
 ```
 Where:
+
  - `score(q,d)` is the scoring function for document (entry) d and query q
  - `queryNorm` is the quotient used to normalize the query and is calculated as `queryNorm = 1 / sqrt(sumOfSquaredWeights)`. Normalizing the query is the process that allows queries to work together despite different structure and different weights assigned to subqueries. 
  -  `coord` is the coordination factor. It denotes how big a part of the queried text was found in the entry fields.

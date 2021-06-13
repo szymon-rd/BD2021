@@ -81,19 +81,19 @@ async function textSearchPsqlTsv(searchString) {
 `@@` operator executes a given query on a tsvector. Above code will search for the `searchString` in the tsvectors created for `body` fields.
 
 #### Benchmarking
+
 | Search string | Returned entries (5000 limit) | Time  |
 |---------------|-------------------------------|-------|
 | bananas       | 4726                          | 726ms |
 | capybara      | 40                            | 20ms  |
 | i love you    | 5000                          | 352ms |
+
 The PostgreSQL TSV is the fastest approach. However, we think that there is an important reason to it being so fast - it's just much simpler than the ElasticSearch scoring. It still does not fullfill all of our expectations - it just checks if the given terms are included in the text search vectors. ElasticSearch model would still give us results that would help us build much better full-text search function to offer to the app's users. And it's also much simpler in terms of the written code and preparations.
 
 ### UI screenshots
 
-#### Text search input
 ![Text search input](./images/4-textsearch-input.png)
 
-#### Text search results
 ![Text search results](./images/4-textsearch-results.png)
 
 ## Custom regexp search
@@ -114,7 +114,9 @@ async function regexSearchPsql(regex) {
 This function will return all comments where the comment's body matches the given regular expression. 
 
 #### Benchmarking
+
 Below are the results of testing this method. The last regexp is a simple expression for short emails.
+
 | Search regexp                            | Returned entries (5000 limit) | Time    |
 |------------------------------------------|-------------------------------|---------|
 | `colou?r`                               | 5000                          | 2686ms  |
@@ -124,6 +126,7 @@ Below are the results of testing this method. The last regexp is a simple expres
 
 ### Elasticsearch approach
 Elastic search offers an out of the box feature of regexp matching. It can by accessed by a `regexp` query. ES offers additional options for regex matching:
+
  - `flags` allows to enables additional features and syntax for writing regular expressions, for examples `<a-b>` syntax for numeric ranges
  - `max_determinized_states` limits amount of states in the finite automaton generated in order to match the query. It's particullarly useful for limiting complexity of the queries entered by app's users.
  - `rewrite` determines how the ES will rewrite the query to make it possible to calculate a score for it.
@@ -162,16 +165,18 @@ async function regexSearchElastic(regex) {
 Once again, ElasticSearch provided much better and consistent performance. It's noticable that it even returned more entries for some of the expressions. It is due to the same mechanism that was present in the previous part about the full-text search. ES queries are rewritten in a way to be fuzzy, so queries that are similiar to the pattern, but not necessairly matching, are also returned.
 
 ### UI screenshots
-#### Regexp search input
+
 ![Regexp search input](./images/4-regex-input.png)
-#### Regexp search results
+
 ![Regexp search results](./images/4-regex-results.png)
 
 ## Weighted search
 Very useful type of searching complex text data is a weighted search. Given a couple of fields, we often want to find if any of these fields contain a given string. What's more, we often want to favor some fields over other. That's when the weighted search is useful. It allows to perform a full-text search in a couple of fields and base scoring on a weighted scores of subqueries performed per field. In our case, we want to search for a given string in:
+
  - `author` with weight equal to 10 
  - `body` with weight equal to 4 
  - `subreddit` with weight equal to 2 
+
 The most important to us is a case when the author name matches the string, then the comment body, and then subreddit name. We created an endpoint that allows querying and presents a view of the weighted search results:
 ```GET /search/weightedSearch?string=:regexpString```
 
@@ -216,6 +221,7 @@ LIMIT 5000
 Once again, the queries took very long to execute and no user would want to wait that much to see their search results.
 
 ### Elasticsearch approach
+
 Weighted search is another feature that is provided out of the box in elasticsearch. For a query of type `query_string` we have to specify `fields` that will be matched against. If we provide their names with `^` and a number next to them, they will interpreted as having a weight equal to the given number. 
 ```
 async function weightedSearchElastic(searchString) {
@@ -241,6 +247,7 @@ async function weightedSearchElastic(searchString) {
 The code is very simple and requires no setup and additional indexing at all.
 
 #### Benchmarking
+
 | Search string | Returned entries (5000 limit) | Time   |
 |---------------|-------------------------------|--------|
 | bananas       | 2551                          | 1323ms |
@@ -252,11 +259,8 @@ These results are much better than in the postgresql TSV approach and can be con
 Postgresql TSV approach is not capable of providing dynamic weights for the queries. The queried field must be prepared before querying, and it can take a very long time. For our dataset consisting of 10 million entities, it took over 40 minutes. For more entries, it would probably get linearly worse. However, using ElasticSearch, we were able to execute dynamic queries on arbitrary fields in much shorter time.
 
 ### UI screenshots
-#### Weighted search input
 
 ![Weighted search input](./images/4-weighted-input.png)
-
-#### Weighted search results
 
 ![Weighted search results](./images/4-weighted-results.png)
 
@@ -265,6 +269,7 @@ Another great example of flexibility of ElasticSearch querying mechanism is its 
 
 ### `function_score` query
 `Function score query` is another type of query in elasticsearch that makes it possible to build a complex query that integrates a couple of subqueries, while allowing a custom scoring combination algorithm. The most important fields of this query type are:
+
  - `score_mode` that specifies how the scoring is combined for all of the queries.
  - `functions` that allow specifying additional functions used in the querying (their score is then combined using `score_mode`)
  - `query`, the query to be combined with queries in `functions`
@@ -320,6 +325,7 @@ async function recentSearchElastic(date, searchString) {
 ```
 
 ### Benchmark
+
 | Search string | Date       | Returned entries (5000 limit) | Time   |
 |---------------|------------|-------------------------------|--------|
 | bananas       | 2011-07-14 | 2551                          | 549ms  |
@@ -328,10 +334,7 @@ async function recentSearchElastic(date, searchString) {
 Once again, the queries were fast and there would be no problem with providing the users with this feature.
 
 ### UI screenshots
-#### Recent search input
 
 ![Recent search input](./images/4-recent-input.png)
-
-#### Recent search results
 
 ![Recent search results](./images/4-recent-results.png)

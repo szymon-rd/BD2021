@@ -10,13 +10,16 @@ We will be working on the example app in the [app](../source/app) source folder.
 
 ## The application
 The application that we will be working on is a very basic reddit-like website. It has the following features: 
- * viewing top reddit comments
- * navigating to their subcomments
- * writing our own comments
+
+ *   viewing top reddit comments
+ *   navigating to their subcomments
+ *   writing our own comments
+
 During this article we will add data analysis features that will allow us to query this massive dataset in a couple of handy ways. 
 
 ### App structure
 The app consists of the following parts:
+
  - repositories (`source/app/repositories`)
  - services (`source/app/services`)
  - routes (`source/app/routes`)
@@ -26,6 +29,7 @@ Each fo these parts have their own responsibilities. `Repositories` store the da
 
 ### Data structure
 Each reddit comment consists of the following fields:
+
  - `subreddit` - where the comment came from
  - `author` - nickname of the comment's author
  - `body` - comment body
@@ -109,11 +113,6 @@ It uses a random v4 UUID trimmed of dashes as id for the new entry.
 ### App interface
 Interface of the app is very simple, below are a few screenshots:
 
-#### /
-![/ view](./images/1-index.png)
-
-#### /comments/top
 ![/comments/top view](./images/1-top-comments.png)
 
-#### /comments/t/:thread_id
 ![/comments/t/:thread_id view](./images/1-thread.png)
