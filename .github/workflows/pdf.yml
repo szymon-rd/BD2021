@@ -16,6 +16,7 @@ jobs:
           cd content
           cat *.md > final.md
       - uses: docker://pandoc/latex:2.9
+        working-directory: content
         with:
           args: --output=pdfs/final.pdf final.md
       - uses: actions/upload-artifact@v1
