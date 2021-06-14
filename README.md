@@ -13,7 +13,6 @@ Each section will be accompanied with related code snippets.
 The report chapters are present in the `/content` directory in this repository.
 
 Auto-generated pdf file: [The latest version of the project's report](https://github.com/sszczep/BD2021/releases/latest/download/final.pdf)
-(we have small issues with images in auto-generation, we will fix them today)
 
 ## Team
 1. Szymon Rodziewicz
