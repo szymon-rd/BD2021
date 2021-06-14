@@ -53,7 +53,7 @@ async function weightedSearch(mode, searchString) {
 
   if(!Object.keys(search).includes(mode)) throw 'Illegal searching mode';
 
-  const comments = search[mode](searchString);
+  const comments = await search[mode](searchString);
   const count = comments.length;
   const top100 = comments.slice(0, 100);
   return { comments: mapToViews(top100), count };

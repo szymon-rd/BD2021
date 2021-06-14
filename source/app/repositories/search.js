@@ -1,19 +1,20 @@
-const db = require("./db");
-const elastic = require("./elastic");
-
-const pool = db.pool;
-const esClient = elastic.client;
+const { client: esClient } = require("./elastic");
+const { pool } = require("./db");
 
 async function textSearchPsql(searchString) {
-  return await (await pool.query(`SELECT * FROM reddit_data WHERE body LIKE '%${searchString}%' LIMIT 5000`)).rows;
+  const { rows } = await pool.query(
+    `SELECT * FROM reddit_data WHERE body LIKE '%${searchString}%' LIMIT 5000`
+  );
+  return rows;
 }
 
 async function textSearchPsqlTsv(searchString) {
-  return await (await pool.query(
+  const { rows } = await pool.query(
     `SELECT * FROM reddit_data 
       WHERE to_tsvector('simple', body) @@ to_tsquery('''${searchString}''')
       LIMIT 5000`
-    )).rows;
+  );
+  return rows; 
 }
 
 function extractSearchBodies(hits) {
@@ -39,11 +40,12 @@ async function textSearchElastic(searchString) {
 }
 
 async function regexSearchPsql(regex) {
-  return await (await pool.query(
+  const { rows } = await pool.query(
     `SELECT * FROM reddit_data 
       WHERE body ~ '${regex}'
       LIMIT 5000`
-    )).rows;
+  );
+  return rows;
 }
 
 async function regexSearchElastic(regex) {
@@ -88,13 +90,14 @@ async function weightedSearchElastic(searchString) {
 }
 
 async function weightedSearchPsqlTsv(searchString) {
-  return await (await pool.query(
+  const { rows } = await pool.query(
     `SELECT *, ts_rank_cd(tsv, query) AS rank
       FROM reddit_data, to_tsquery('''${searchString}''') query
       WHERE query @@ tsv
       ORDER BY rank DESC
       LIMIT 5000`
-    )).rows;
+  );
+  return rows;
 }
 
 async function recentSearchElastic(date, searchString) {
@@ -128,4 +131,4 @@ async function recentSearchElastic(date, searchString) {
   return extractSearchBodies(body.hits.hits);
 }
 
-module.exports = {textSearchElastic, textSearchPsql, textSearchPsqlTsv, regexSearchPsql, regexSearchElastic, weightedSearchElastic, weightedSearchPsqlTsv, recentSearchElastic};
+module.exports = { textSearchElastic, textSearchPsql, textSearchPsqlTsv, regexSearchPsql, regexSearchElastic, weightedSearchElastic, weightedSearchPsqlTsv, recentSearchElastic };
