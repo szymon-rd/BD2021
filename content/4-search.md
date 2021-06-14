@@ -338,3 +338,4 @@ Once again, the queries were fast and there would be no problem with providing t
 ![Recent search input](./images/4-recent-input.png)
 
 ![Recent search results](./images/4-recent-results.png)
+
