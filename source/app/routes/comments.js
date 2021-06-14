@@ -1,38 +1,45 @@
-var express = require('express');
-var router = express.Router();
-var commentsServices = require('../services/comments');
+const express = require('express');
+const router = express.Router();
+const commentsServices = require('../services/comments');
 
-router.get('/', function(req, res, next) {
-  res.redirect('comments/top')
+router.get('/', (_req, res, _next) => {
+  res.redirect('comments/top');
 })
 
-router.get('/top', async function(req, res, next) {
-  let afterParam = parseInt(req.query.after)
-  let after = (isNaN(afterParam)) ? 0 : afterParam;
-  let comments = await commentsServices.getTopComments(after);
-  let showPrev = after > 0
-  let prevAt = Math.max(0, after - 20)
-  let nextAt = after + 20
-  res.render('top-comments', {comments: comments, show_prev: showPrev, prev_at: prevAt, next_at: nextAt});
+router.get('/top', async (req, res, _next) => {
+  let after = parseInt(req.query.after);
+  if(isNaN(after)) after = 0;
+
+  const comments = await commentsServices.getTopComments(after);
+  const showPrev = after > 0;
+  const prevAt = Math.max(0, after - 20)
+  const nextAt = after + 20
+
+  res.render('top-comments', { comments: comments, show_prev: showPrev, prev_at: prevAt, next_at: nextAt });
 });
 
-router.get('/t/:threadId', async function(req, res, next) {
-  let threadId = req.params.threadId
-  let threadComment = await commentsServices.getThreadComment(threadId);
-  if(threadComment == null) {
-    res.render('error', {message: 'Thread not found', error: {status: 404}})
+router.get('/t/:threadId', async (req, res, _next) => {
+  const { threadId } = req.params;
+
+  const threadComment = await commentsServices.getThreadComment(threadId);
+
+  if(threadComment === null) {
+    res.render('error', { message: 'Thread not found', error: { status: 404 } })
   } else {
-    let comments = await commentsServices.getCommentsForThread(threadId);
-    res.render('thread', {tcomment: threadComment, comments: comments});
+    const comments = await commentsServices.getCommentsForThread(threadId);
+    res.render('thread', { tcomment: threadComment, comments: comments });
   }
 });
  // subreddit, author, threadId, text, ups
 router.post('/t/:threadId', async function(req, res, next) {
-  let threadId = req.params.threadId
-  let threadComment = await commentsServices.getThreadComment(threadId);
-  let subreddit = threadComment.subreddit;
+  const { threadId } = req.params;
+
+  const threadComment = await commentsServices.getThreadComment(threadId);
+  const { subreddit } = threadComment;
   let author = "testAuthor"; // mock author
+
   await commentsServices.createComment(subreddit, author, threadId, req.body.text, req.body.upvotes);
+  
   res.redirect(req.originalUrl);
 });
 

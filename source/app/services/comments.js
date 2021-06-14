@@ -1,4 +1,4 @@
-var commentsRepository = require('../repositories/comments');
+const commentsRepository = require('../repositories/comments');
 
 function mapToViews(comments) {
   return comments.map(mapToView);
@@ -17,31 +17,24 @@ function mapToView(comment) {
 }
 
 async function getThreadComment(threadId) {
-  let commentsRaw = await commentsRepository.fetchComment(threadId);
-  let headComment = commentsRaw[0];
-  if(headComment == undefined) return null;
-  else {
-    let commentView = mapToView(headComment);
-    return commentView;
-  }
+  const [headComment] = await commentsRepository.fetchComment(threadId);
+  return headComment != undefined ? mapToView(headComment) : null;
 }
 
 async function getTopComments(after) {
-  let afterNotNull = (after == null) ? 0 : after;
-  let commentsRaw = await commentsRepository.fetchTopComments(20, afterNotNull);
-  let commentsView = mapToViews(commentsRaw);
-  return commentsView;
+  const afterNotNull = after || 0;
+  const commentsRaw = await commentsRepository.fetchTopComments(20, afterNotNull);
+  return mapToViews(commentsRaw);
 }
 
 async function getCommentsForThread(threadId) {
-  let commentsRaw = await commentsRepository.fetchCommentsForThread(threadId);
-  let commentsView = mapToViews(commentsRaw);
-  return commentsView;
+  const commentsRaw = await commentsRepository.fetchCommentsForThread(threadId);
+  return mapToViews(commentsRaw);
 }
 
 async function createComment(subreddit, author, threadId, text, ups) {
-  let timeNow = (new Date()).getTime();
+  let timeNow = new Date().getTime();
   await commentsRepository.persistComment(subreddit, author, timeNow, text, ups, threadId)
 }
 
-module.exports = {getTopComments, getCommentsForThread, getThreadComment, createComment};
+module.exports = { getTopComments, getCommentsForThread, getThreadComment, createComment };

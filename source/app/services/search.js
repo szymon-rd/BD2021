@@ -1,4 +1,4 @@
-var searchRepository = require('../repositories/search');
+const searchRepository = require('../repositories/search');
 
 function mapToViews(comments) {
   return comments.map(mapToView);
@@ -17,63 +17,53 @@ function mapToView(comment) {
 }
 
 async function textSearch(mode, searchString) {
-  var comments;
-  switch (mode) {
-    case 'es':
-      comments = await searchRepository.textSearchElastic(searchString);
-      break;
-    case 'psql':
-      comments = await searchRepository.textSearchPsql(searchString);
-      break;
-    case 'psqltsv':
-      comments = await searchRepository.textSearchPsqlTsv(searchString);
-      break; 
-    default:
-      throw `illegal search mode ${mode}`;
-  }
-  let count = comments.length;
-  let first = comments.slice(0,100);
-  return {comments: mapToViews(first), count: count};
+  const search = { 
+    'es': searchRepository.textSearchElastic,
+    'psql': searchRepository.textSearchPsql,
+    'psqltsv': searchRepository.textSearchPsqlTsv,
+  };
+
+  if(!Object.keys(search).includes(mode)) throw 'Illegal searching mode';
+
+  const comments = await search[mode](searchString);
+  const count = comments.length;
+  const top100 = comments.slice(0, 100);
+  return { comments: mapToViews(top100), count };
 }
 
 async function regexSearch(mode, searchString) {
-  var comments;
-  switch (mode) {
-    case 'es':
-      comments = await searchRepository.regexSearchElastic(searchString);
-      break;
-    case 'psql':
-      comments = await searchRepository.regexSearchPsql(searchString);
-      break;
-    default:
-      throw `illegal search mode ${mode}`;
-  }
-  let count = comments.length;
-  let first = comments.slice(0,100);
-  return {comments: mapToViews(first), count: count};
+  const search = {
+    'es': searchRepository.regexSearchElastic,
+    'psql': searchRepository.regexSearchPsql
+  };
+
+  if(!Object.keys(search).includes(mode)) throw 'Illegal searching mode';
+
+  const comments = await search[mode](searchString);
+  const count = comments.length;
+  const top100 = comments.slice(0, 100);
+  return { comments: mapToViews(top100), count };
 }
 
 async function weightedSearch(mode, searchString) {
-  var comments;
-  switch (mode) {
-    case 'es':
-      comments = await searchRepository.weightedSearchElastic(searchString);
-      break;
-    case 'psql':
-      comments = await searchRepository.weightedSearchPsqlTsv(searchString);
-      break;
-    default:
-      throw `illegal search mode ${mode}`;
-  }
-  let count = comments.length;
-  let first = comments.slice(0,100);
-  return {comments: mapToViews(first), count: count};
+  const search = {
+    'es': searchRepository.weightedSearchElastic,
+    'psql': searchRepository.weightedSearchPsqlTsv
+  };
+
+  if(!Object.keys(search).includes(mode)) throw 'Illegal searching mode';
+
+  const comments = search[mode](searchString);
+  const count = comments.length;
+  const top100 = comments.slice(0, 100);
+  return { comments: mapToViews(top100), count };
 }
 
 async function recentSearch(date, searchString) {
-  let comments = await searchRepository.recentSearchElastic(date, searchString);
-  let count = comments.length;
-  let first = comments.slice(0,100);
-  return {comments: mapToViews(first), count: count};
+  const comments = await searchRepository.recentSearchElastic(date, searchString);
+  const count = comments.length;
+  const top100 = comments.slice(0, 100);
+  return {comments: mapToViews(top100), count };
 }
-module.exports = {textSearch, regexSearch, weightedSearch, recentSearch};
+
+module.exports = { textSearch, regexSearch, weightedSearch, recentSearch };

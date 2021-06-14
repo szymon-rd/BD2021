@@ -1,23 +1,24 @@
 const uuid = require("uuid");
-const db = require("./db");
-const es = require("./elastic");
-const pool = db.pool;
-const esClient = es.client
+const { client: esClient } = require("./elastic");
+const { pool } = require("./db");
 
 async function fetchTopComments(limit, offset) {
-  return await (await pool.query(`SELECT * FROM reddit_data ORDER BY ups DESC LIMIT ${limit} OFFSET ${offset}`)).rows;
+  const { rows } = await pool.query(`SELECT * FROM reddit_data ORDER BY ups DESC LIMIT ${limit} OFFSET ${offset}`);
+  return rows;
 }
 
 async function fetchComment(threadId) {
-  return await (await pool.query(`SELECT * FROM reddit_data WHERE name='${threadId}'`)).rows;
+  const { rows } = await pool.query(`SELECT * FROM reddit_data WHERE name='${threadId}'`);
+  return rows;
 }
 
 async function fetchCommentsForThread(threadId, limit = 20) {
-  return await (await pool.query(`SELECT * FROM reddit_data WHERE parent_id='${threadId}' ORDER BY ups DESC LIMIT ${limit}`)).rows;
+  const { rows } = await pool.query(`SELECT * FROM reddit_data WHERE parent_id='${threadId}' ORDER BY ups DESC LIMIT ${limit}`);
+  return rows;
 }
 
 async function persistComment(subreddit, author, createdAt, body, ups, parentId) {
-  let randomId = uuid.v4().replace('-', '');
+  const randomId = uuid.v4().replace('-', '');
   await pool.query(`INSERT INTO reddit_data 
     (name, subreddit, subreddit_id, author, edited, controversiality, created_utc, body, ups, downs, score, parent_id, archived) 
     VALUES ('${randomId}', '${subreddit}', '${subreddit}', '${author}', 'false', '0', '${createdAt}', '${body}', '${ups}', 0, '${ups}', '${parentId}', 'false')
@@ -39,8 +40,7 @@ async function persistComment(subreddit, author, createdAt, body, ups, parentId)
       parentId: parentId,
       archived: false
     }
-  })
-  console.log("inserted")
+  });
 }
  
-module.exports = {fetchTopComments, fetchCommentsForThread, fetchComment, persistComment};
+module.exports = { fetchTopComments, fetchCommentsForThread, fetchComment, persistComment };
