@@ -113,6 +113,9 @@ It uses a random v4 UUID trimmed of dashes as id for the new entry.
 ### App interface
 Interface of the app is very simple, below are a few screenshots:
 
+![/ view](./images/1-top-comments.png)
+
 ![/comments/top view](./images/1-top-comments.png)
 
 ![/comments/t/:thread_id view](./images/1-thread.png)
+

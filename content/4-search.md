@@ -288,7 +288,7 @@ gauss: {
 ```
 The above snippet says that we want to match the `created_utc` field against the provided `date` with a gaussian distribution calculated based on the provided values. The resulting distribution is best described with the following image:
 
-![alt text](./images/4-decay.png)
+![Decay functions](./images/4-decay.png)
 
 By combining the gaussian decay function and a simple string matchin with a `multiply` score_mode, we get exactly what we wanted to achieve - a scoring algorithm returning a product of the string match score and the gaussian decay score:
 
