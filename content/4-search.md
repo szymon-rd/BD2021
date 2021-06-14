@@ -1,5 +1,29 @@
 # Implementing and benchmarking complex searching
 
+## Data redundancy
+As a first step, we need to introduce an method call that adds every new comment to the elasticsearch collection after adding it to the postgresql. We added the following code to the `persistComment` function in comments repository. `index` method is used to to add a new entry to the collection.
+
+```
+await esClient.index({
+  index: 'reddit_data',
+  id: randomId,
+  body: {
+    name: randomId,
+    subreddit: subreddit,
+    subreddit_id: subreddit,
+    author: author,
+    edited: false,
+    controversiality: 0,
+    createdAt: createdAt,
+    ups: ups,
+    downs: 0,
+    score: ups,
+    parentId: parentId,
+    archived: false
+  }
+})
+```
+
 ## Full-text search
 Full-text searching features allow us to search for a specific term (or similiar ones) in the text content. In our case, we want to search for a given term (or terms) in the comments. In our application, we want to create a new endpoint that will allow us a full text search on the full set of entries:
 
@@ -205,11 +229,6 @@ async function weightedSearchPsqlTsv(searchString) {
 }
 
 ```
-SELECT *, ts_rank_cd(tsv, query) AS rank
-FROM reddit_data, to_tsquery('''${searchString]''') query
-WHERE query @@ tsv
-ORDER BY rank DESC
-LIMIT 5000
 
 #### Benchmarking
 
