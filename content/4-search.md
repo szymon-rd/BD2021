@@ -28,6 +28,7 @@ await esClient.index({
 Full-text searching features allow us to search for a specific term (or similiar ones) in the text content. In our case, we want to search for a given term (or terms) in the comments. In our application, we want to create a new endpoint that will allow us a full text search on the full set of entries:
 
 ```GET /search/textSearch?string=:searchString```
+
 ### Basic PostgresSQL approach
 ```
 async function textSearchPsql(searchString) {
